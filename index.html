@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harshit | Video Editor</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP & Lenis for Smooth Scrolling -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#F0640D'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+        :root {
+            --lenis-scroll-snap-type: none;
+        }
+
+        html.lenis {
+            height: auto;
+        }
+        .lenis.lenis-smooth {
+            scroll-behavior: auto;
+        }
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+
+        body {
+            background-color: #070707;
+            color: #ffffff;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070707;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 4px;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .hero-bg {
+            background-color: #180d08;
+            background-image: 
+                radial-gradient(65% 55% at 92% 6%, #F0640D 0%, rgba(240,100,13,0) 65%),
+                radial-gradient(60% 55% at 4% 82%, #EC690F 0%, rgba(236,105,15,0) 65%),
+                radial-gradient(75% 80% at 48% 42%, #B01205 0%, rgba(176,18,5,0) 70%),
+                linear-gradient(180deg, #D8470A 0%, #C0300A 28%, #B01205 46%, #7A1C08 68%, #2A1108 88%, #180D08 100%);
+        }
+
+        /* Marquee Animation */
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: scroll 30s linear infinite;
+        }
+        .marquee-track.reverse {
+            animation: scroll-reverse 30s linear infinite;
+        }
+        @keyframes scroll {
+            to { transform: translateX(-50%); }
+        }
+        @keyframes scroll-reverse {
+            from { transform: translateX(-50%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Hero Image Masking - Removed inset so image stands free like the template */
+        .hero-mask {
+            will-change: transform;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand selection:text-white">
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center transition-all duration-300" id="header">
+        <a href="#" class="text-2xl md:text-3xl font-normal tracking-tight text-white drop-shadow-lg z-50 relative uppercase">
+            HARSHIT<span class="text-white/50">VOSS</span>
+        </a>
+        <a href="#contact" class="bg-white px-6 py-2.5 rounded-full text-black font-medium hover:bg-gray-200 transition-colors z-50 relative flex items-center gap-2 text-sm">
+            <span class="w-1.5 h-1.5 bg-black rounded-full block"></span> Get in Touch
+        </a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative w-screen h-[250vh]" id="hero">
+        <div class="hero-bg sticky top-0 w-screen h-screen flex flex-col justify-center items-center overflow-hidden" id="hero-sticky">
+            
+            <!-- Hero Content Layer (Behind Image) -->
+            <div class="absolute inset-0 flex justify-between items-center z-10 px-10 max-w-[1400px] mx-auto w-full pointer-events-none" id="hero-text">
+                <!-- Left Text -->
+                <div class="w-1/2">
+                    <h1 class="text-[7vw] leading-[1.05] font-medium tracking-tight drop-shadow-xl text-white">
+                        Visualise<br>Your Mind<br>in Motion
+                    </h1>
+                </div>
+                <!-- Right Text -->
+                <div class="w-1/4 text-right flex flex-col gap-[15vh] text-[1.1vw] font-medium text-white drop-shadow-md">
+                    <p>Featured<br/>Edits</p>
+                    <p>Creative<br>Video Editor</p>
+                </div>
+            </div>
+
+            <!-- Hero Image Layer (In front of Text) -->
+            <div class="absolute inset-0 z-20 flex justify-center items-end overflow-hidden pointer-events-none">
+                <div class="w-[80vw] h-[90vh] md:w-[60vw] md:h-[90vh] hero-mask flex items-end justify-center" id="hero-image-mask">
+                    <img src="./base.png" alt="Harshit" class="w-full h-full object-contain object-bottom drop-shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee Section -->
+    <section class="py-20 overflow-hidden relative z-10 bg-[#070707]">
+        <div class="flex flex-col gap-6 w-[200vw] -ml-[10vw]">
+            <div class="marquee-track flex gap-6">
+                <!-- Row 1 Videos -->
+                <div class="w-[30vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video1.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[30vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video2.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[30vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video3.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[30vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video4.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <!-- Duplicate for seamless scroll -->
+                <div class="w-[30vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video1.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[30vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video2.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[30vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video3.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[30vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video4.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+            </div>
+            <div class="marquee-track reverse flex gap-6">
+                <!-- Row 2 Videos -->
+                <div class="w-[35vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video5.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[35vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video1.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[35vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video3.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[35vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video2.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <!-- Duplicate for seamless scroll -->
+                <div class="w-[35vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video5.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[35vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video1.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[35vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video3.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+                <div class="w-[35vw] h-[20vw] bg-white/5 rounded-xl shrink-0 overflow-hidden"><video preload="none" data-src="video2.mp4"  loop muted playsinline class="w-full h-full object-cover"></video></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Selected Work (Sticky Scroll) -->
+    <section class="relative w-screen h-[300vh] py-20 bg-[#070707]" id="portfolio">
+        <!-- Orange/Red Glow Effect -->
+        <div class="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-r from-[#F16B0D] to-[#E61416] opacity-20 blur-3xl rounded-full translate-y-[-50%] z-0 pointer-events-none"></div>
+
+        <div class="sticky top-0 h-screen w-full flex items-center px-10 max-w-7xl mx-auto gap-10 z-10">
+            <!-- Left Side Text & List -->
+            <div class="w-1/2 h-full flex flex-col justify-center">
+                <h2 class="text-6xl font-black mb-16 drop-shadow-md">My Work</h2>
+                
+                <div class="flex flex-col gap-10 relative">
+                    <!-- Progress Line -->
+                    <div class="absolute left-[5px] top-4 bottom-4 w-px bg-white/20">
+                        <div class="w-full bg-brand origin-top scale-y-0" id="work-progress" style="height: 100%;"></div>
+                    </div>
+
+                    <!-- Work Items -->
+                    <div class="pl-10 relative group cursor-pointer work-item">
+                        <div class="absolute left-[-2px] top-2 w-4 h-4 rounded-full bg-white group-hover:bg-brand transition-colors indicator"></div>
+                        <h3 class="text-3xl font-bold mb-2">Commercial Cut</h3>
+                        <p class="text-white/70 font-medium">Editing • Sound Design</p>
+                    </div>
+                    <div class="pl-10 relative group cursor-pointer work-item">
+                        <div class="absolute left-[-2px] top-2 w-4 h-4 rounded-full bg-white/40 group-hover:bg-brand transition-colors indicator"></div>
+                        <h3 class="text-3xl font-bold mb-2">Music Video</h3>
+                        <p class="text-white/70 font-medium">Color Grade • VFX</p>
+                    </div>
+                    <div class="pl-10 relative group cursor-pointer work-item">
+                        <div class="absolute left-[-2px] top-2 w-4 h-4 rounded-full bg-white/40 group-hover:bg-brand transition-colors indicator"></div>
+                        <h3 class="text-3xl font-bold mb-2">Documentary</h3>
+                        <p class="text-white/70 font-medium">Narrative • Cut</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side Image Container -->
+            <div class="w-1/2 h-[70vh] bg-[#F4EFE9] rounded-2xl overflow-hidden relative shadow-2xl">
+                <!-- Overlay layers for images, controlled by GSAP -->
+                <div class="absolute inset-0 bg-[#111] flex items-center justify-center text-white/50 z-10 work-image" id="img-1">
+                    <video preload="none" data-src="clientwork.mp4"  loop muted playsinline class="w-full h-full object-cover"></video>
+                </div>
+                <div class="absolute inset-0 bg-[#222] flex items-center justify-center text-white/50 z-20 translate-y-full work-image" id="img-2">
+                    <video preload="none" data-src="clientwork2.mp4"  loop muted playsinline class="w-full h-full object-cover"></video>
+                </div>
+                <div class="absolute inset-0 bg-[#333] flex items-center justify-center text-white/50 z-30 translate-y-full work-image" id="img-3">
+                    <video preload="none" data-src="clientwork3.mp4"  loop muted playsinline class="w-full h-full object-cover"></video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Work With Me -->
+    <section class="py-32 max-w-7xl mx-auto px-8 bg-[#070707] relative z-10">
+        <div class="text-center mb-20">
+            <h2 class="text-5xl md:text-6xl font-normal mb-4 drop-shadow-md">Why Work With Me?</h2>
+            <p class="text-xl text-white/70">Elevate your visual storytelling</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="border border-white/10 p-10 rounded-2xl hover:bg-white/5 transition-colors">
+                <div class="mb-6">
+                    <svg class="w-12 h-12 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-normal mb-4">Fast Turnaround</h3>
+                <p class="text-white/60 leading-relaxed text-lg">Delivering high-quality cuts and grades on tight deadlines without compromising creativity.</p>
+            </div>
+            <div class="border border-white/10 p-10 rounded-2xl hover:bg-white/5 transition-colors">
+                <div class="mb-6">
+                    <svg class="w-12 h-12 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-normal mb-4">Cinematic Aesthetic</h3>
+                <p class="text-white/60 leading-relaxed text-lg">Meticulous attention to color science, pacing, and visual rhythm for premium results.</p>
+            </div>
+            <div class="border border-white/10 p-10 rounded-2xl hover:bg-white/5 transition-colors">
+                <div class="mb-6">
+                    <svg class="w-12 h-12 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-normal mb-4">Trend Integration</h3>
+                <p class="text-white/60 leading-relaxed text-lg">Expertise in both classic film techniques and modern, high-engagement social media styles.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services (Horizontal Scroll) -->
+    <section class="relative w-screen h-[300vh] bg-[#070707]" id="services">
+        <div class="sticky top-0 h-screen w-screen flex flex-col justify-center overflow-hidden">
+            <div class="px-10 max-w-7xl mx-auto w-full mb-10">
+                <h2 class="text-6xl font-normal drop-shadow-md leading-[1.1]">Design That Speaks<br>to Your Audience</h2>
+            </div>
+            
+            <div class="flex gap-6 px-10 w-[200vw]" id="services-track">
+                <!-- Service Card -->
+                <div class="w-[35vw] h-[55vh] bg-[#161616] border border-white/10 rounded-2xl p-10 flex flex-col justify-between shrink-0 group relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[#F16B0D] to-[#E61416] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
+                    <div class="relative z-10">
+                        <h3 class="text-4xl font-normal mb-6">Video Editing</h3>
+                        <p class="text-xl text-white/80 leading-relaxed group-hover:text-white">From raw footage to final cut, assembling the narrative flow that captures attention.</p>
+                    </div>
+                </div>
+                <!-- Service Card -->
+                <div class="w-[35vw] h-[55vh] bg-[#161616] border border-white/10 rounded-2xl p-10 flex flex-col justify-between shrink-0 group relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[#F16B0D] to-[#E61416] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
+                    <div class="relative z-10">
+                        <h3 class="text-4xl font-normal mb-6">Color Grading</h3>
+                        <p class="text-xl text-white/80 leading-relaxed group-hover:text-white">Developing the visual mood and aesthetic tone through professional color correction and styling.</p>
+                    </div>
+                </div>
+                <!-- Service Card -->
+                <div class="w-[35vw] h-[55vh] bg-[#161616] border border-white/10 rounded-2xl p-10 flex flex-col justify-between shrink-0 group relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[#F16B0D] to-[#E61416] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
+                    <div class="relative z-10">
+                        <h3 class="text-4xl font-normal mb-6">Motion Graphics</h3>
+                        <p class="text-xl text-white/80 leading-relaxed group-hover:text-white">Enhancing videos with dynamic titles, lower thirds, and animated visual elements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trusted By Blur Section -->
+    <section class="py-40 relative overflow-hidden flex flex-col items-center justify-center text-center bg-[#070707]">
+        <h2 class="text-5xl md:text-7xl font-normal max-w-5xl px-4 leading-tight drop-shadow-lg z-10">
+            Trusted by Creators, Built for Ambitious Brands.
+        </h2>
+    </section>
+
+    <!-- Footer / Contact -->
+    <footer id="contact" class="bg-[#070707] py-20 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-10 text-center">
+            <h2 class="text-6xl font-normal mb-10">Ready to Collaborate?</h2>
+            
+            <div class="flex flex-col items-center gap-4 mb-10">
+                <a href="mailto:harshitkaushik9755@gmail.com" class="text-xl md:text-2xl text-white/80 hover:text-brand transition-colors">harshitkaushik9755@gmail.com</a>
+                <a href="tel:9599122756" class="text-xl md:text-2xl text-white/80 hover:text-brand transition-colors">+91 9599 122 756</a>
+            </div>
+
+            <a href="mailto:harshitkaushik9755@gmail.com" class="inline-block bg-brand text-white hover:bg-[#D8470A] transition-colors text-xl font-medium py-5 px-12 rounded-full shadow-2xl">
+                Start a Project
+            </a>
+            <p class="mt-20 text-white/30">&copy; 2026 Harshit | Video Editor.</p>
+        </div>
+    </footer>
+
+    <!-- GSAP Animations Script -->
+    <script>
+        // 1. Initialize Lenis for Smooth Scrolling
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // 2. Initialize GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Mask Reveal Animation
+        // As we scroll down the hero section, the image scales up and text moves
+        const heroTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: '#hero',
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1,
+            }
+        });
+        
+        // Scale the image up slightly as we scroll
+        heroTl.to('#hero-image-mask', {
+            scale: 1.2,
+            ease: 'none'
+        }, 0);
+        
+        // Move text out of the way
+        heroTl.to('#hero-text', {
+            y: -100,
+            opacity: 0,
+            ease: 'none'
+        }, 0);
+
+        // Portfolio Sticky Section Animation
+        const workTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: '#portfolio',
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1,
+            }
+        });
+
+        // Progress line
+        workTl.to('#work-progress', { scaleY: 1, ease: 'none' }, 0);
+        
+        // Slide images up
+        workTl.to('#img-2', { y: '0%', ease: 'none' }, 0.2);
+        workTl.to('#img-3', { y: '0%', ease: 'none' }, 0.6);
+
+        // Change indicator colors
+        const indicators = document.querySelectorAll('.indicator');
+        workTl.to(indicators[0], {backgroundColor: 'rgba(255,255,255,0.4)', ease: 'none'}, 0.2);
+        workTl.to(indicators[1], {backgroundColor: '#ffffff', ease: 'none'}, 0.2);
+        
+        workTl.to(indicators[1], {backgroundColor: 'rgba(255,255,255,0.4)', ease: 'none'}, 0.6);
+        workTl.to(indicators[2], {backgroundColor: '#ffffff', ease: 'none'}, 0.6);
+
+        // Services Horizontal Scroll Animation
+        const servicesTrack = document.getElementById('services-track');
+        
+        gsap.to(servicesTrack, {
+            x: () => -(servicesTrack.scrollWidth - window.innerWidth + 80),
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '#services',
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1,
+                invalidateOnRefresh: true
+            }
+        });
+
+        // Connect Lenis to ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time)=>{
+          lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+    </script>
+        // Lazy load and play/pause videos based on visibility
+        document.addEventListener("DOMContentLoaded", function() {
+            var lazyVideos = [].slice.call(document.querySelectorAll("video[data-src]"));
+            
+            if ("IntersectionObserver" in window) {
+                var lazyVideoObserver = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(function(video) {
+                        if (video.isIntersecting) {
+                            if (!video.target.src) {
+                                video.target.src = video.target.dataset.src;
+                            }
+                            video.target.play();
+                        } else {
+                            if (video.target.src) {
+                                video.target.pause();
+                            }
+                        }
+                    });
+                }, { rootMargin: "100px" });
+                
+                lazyVideos.forEach(function(lazyVideo) {
+                    lazyVideoObserver.observe(lazyVideo);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
