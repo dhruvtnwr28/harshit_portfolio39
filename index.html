@@ -108,7 +108,7 @@
     <!-- Header -->
     <header class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center transition-all duration-300" id="header">
         <a href="#" class="text-2xl md:text-3xl font-normal tracking-tight text-white drop-shadow-lg z-50 relative uppercase">
-            HARSHIT<span class="text-white/50">VOSS</span>
+            HARSHIT<span class="text-white/50">KAUSHIK</span>
         </a>
         <a href="#contact" class="bg-white px-6 py-2.5 rounded-full text-black font-medium hover:bg-gray-200 transition-colors z-50 relative flex items-center gap-2 text-sm">
             <span class="w-1.5 h-1.5 bg-black rounded-full block"></span> Get in Touch
@@ -194,16 +194,19 @@
                         <div class="absolute left-[-2px] top-2 w-4 h-4 rounded-full bg-white group-hover:bg-brand transition-colors indicator"></div>
                         <h3 class="text-xl md:text-3xl font-bold mb-1 md:mb-2">Commercial Cut</h3>
                         <p class="text-white/70 font-medium">Editing • Sound Design</p>
+                        <button class="mt-4 flex items-center gap-2 text-sm text-white/90 hover:text-brand transition-colors view-video-btn" data-video="clientwork.mp4"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Watch with Sound</button>
                     </div>
                     <div class="pl-10 relative group cursor-pointer work-item">
                         <div class="absolute left-[-2px] top-2 w-4 h-4 rounded-full bg-white/40 group-hover:bg-brand transition-colors indicator"></div>
                         <h3 class="text-xl md:text-3xl font-bold mb-1 md:mb-2">Music Video</h3>
                         <p class="text-white/70 font-medium">Color Grade • VFX</p>
+                        <button class="mt-4 flex items-center gap-2 text-sm text-white/90 hover:text-brand transition-colors view-video-btn" data-video="clientwork2.mp4"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Watch with Sound</button>
                     </div>
                     <div class="pl-10 relative group cursor-pointer work-item">
                         <div class="absolute left-[-2px] top-2 w-4 h-4 rounded-full bg-white/40 group-hover:bg-brand transition-colors indicator"></div>
                         <h3 class="text-xl md:text-3xl font-bold mb-1 md:mb-2">Documentary</h3>
                         <p class="text-white/70 font-medium">Narrative • Cut</p>
+                        <button class="mt-4 flex items-center gap-2 text-sm text-white/90 hover:text-brand transition-colors view-video-btn" data-video="clientwork3.mp4"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Watch with Sound</button>
                     </div>
                 </div>
             </div>
@@ -437,6 +440,20 @@
             }
         });
     </script>
+
+    <!-- Video Modal with Ambient Glow -->
+    <div id="video-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/90 opacity-0 transition-opacity duration-300 backdrop-blur-sm">
+        <button id="close-modal" class="absolute top-6 right-6 md:top-10 md:right-10 flex items-center gap-2 text-white text-sm md:text-base font-medium px-6 py-3 bg-white/10 rounded-full hover:bg-white/20 transition-colors z-20 backdrop-blur-md cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg> Back
+        </button>
+        <div class="relative w-full max-w-6xl aspect-video mx-4 md:mx-10 flex items-center justify-center">
+            <!-- Ambient Glow Video -->
+            <video id="modal-video-ambient" class="absolute inset-0 w-full h-full object-cover blur-[60px] md:blur-[100px] opacity-70 scale-110 pointer-events-none" muted loop playsinline></video>
+            <!-- Main Video -->
+            <video id="modal-video-main" class="relative z-10 w-full h-full object-contain rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] bg-black" controls controlsList="nodownload"></video>
+        </div>
+    </div>
+
 </body>
 
 </html>
